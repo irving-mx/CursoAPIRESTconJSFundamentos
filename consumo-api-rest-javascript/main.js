@@ -14,7 +14,7 @@
 //     window.location.reload()
 // })
 
-const urlApi = 'https://api.thecatapi.com/v1/images/search?limit=3';
+const urlApi = 'https://api.thecatapi.com/v1/images/search?limit=3&api_key=live_EAiOhGE3wh3dcvwYQxxwZ7X5N3zYG286hEFBNu5jjFYnwYNxYNA07tCpg9XTOGGT';
 
 async function reload(urlApi){
     const response = await fetch(urlApi);
@@ -35,7 +35,7 @@ const button = document.querySelector('button')
 
 button.addEventListener('click',()=>{
     reload(urlApi);
-    windows.location.reload();
+    window.location.reload();
 })
 
 // Se manda a llamar la función cuando recien se carga la página
