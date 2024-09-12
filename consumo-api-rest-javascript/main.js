@@ -2,6 +2,8 @@ const urlApi_RANDOM = 'https://api.thecatapi.com/v1/images/search?limit=2&api_ke
 
 const urlApi_FAVORITES = 'https://api.thecatapi.com/v1/favourites?api_key=live_EAiOhGE3wh3dcvwYQxxwZ7X5N3zYG286hEFBNu5jjFYnwYNxYNA07tCpg9XTOGGT';
 
+const urlApi_FAVORITES_DELETE= (id) => `https://api.thecatapi.com/v1/favourites/${id}?api_key=live_EAiOhGE3wh3dcvwYQxxwZ7X5N3zYG286hEFBNu5jjFYnwYNxYNA07tCpg9XTOGGT`;
+
 const spanError = document.getElementById('error')
 
 async function loadRandomMichis(){
@@ -20,9 +22,8 @@ async function loadRandomMichis(){
         img1.src = data[0].url;
         img2.src = data[1].url;
 
-
-        btn1.onclick = () => saveFavouriteMichi(data[0].id)
-        btn2.onclick = () => saveFavouriteMichi(data[1].id)
+        btn1.onclick = () => saveFavouriteMichi(data[0].id);
+        btn2.onclick = () => saveFavouriteMichi(data[1].id);
     }
 }
 async function loadFavouriteMichis(){
@@ -35,13 +36,19 @@ async function loadFavouriteMichis(){
     if(response.status !== 200){
         spanError.innerHTML = "Hubo un error : "+ response.status + " / " + data.message;
     }else{
-        data.forEach(michi => {
             const section = document.getElementById('favoriteMichis');
+            section.innerHTML= "";
+            const h2 = document.createElement('h2')
+            const h2Text = document.createTextNode('Michis favoritos')
+            h2.appendChild(h2Text)
+            section.appendChild(h2)
+
+            data.forEach(michi => {
             const article = document.createElement('article');
             const img = document.createElement('img');
             const btn = document.createElement('button');
             const btnText = document.createTextNode('Sacar al michi de favoritos');
-
+            btn.addEventListener("click",()=> deleteFaouvotireMichi(michi.id))
             img.src = michi.image.url;
             img.width = 150;
             btn.appendChild(btnText);
@@ -74,11 +81,30 @@ async function saveFavouriteMichi(id){
 
     if(res.status !== 200){
         spanError.innerHTML = "Hubo un error : "+ res.status + " / " + data.message;
+    }else{
+        console.log("Michi guardado en favoritos")
+        loadFavouriteMichis();
     }
 }
 
 
+async function deleteFaouvotireMichi(id){
+    const res = await fetch(urlApi_FAVORITES_DELETE(id),
+        {
+            method:'DELETE',
+        }
+    );
+    const data = await res.json();    
+    console.log('Delete')
+    console.log(data)
 
+    if(res.status !== 200){
+        spanError.innerHTML = "Hubo un error : "+ res.status + " / " + data.message;
+    }else {
+        console.log("Michi eliminado de favoritos")
+        loadFavouriteMichis();
+    }
+}
 
 
 // Se manda a llamar la función cuando recien se carga la página
