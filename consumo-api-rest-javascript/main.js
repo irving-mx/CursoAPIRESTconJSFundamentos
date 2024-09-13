@@ -2,6 +2,8 @@ const urlApi_RANDOM = 'https://api.thecatapi.com/v1/images/search?limit=2';
 
 const urlApi_FAVORITES = 'https://api.thecatapi.com/v1/favourites?';
 
+const urlApi_UPLOAD = 'https://api.thecatapi.com/v1/images/upload';
+
 const urlApi_FAVORITES_DELETE= (id) => `https://api.thecatapi.com/v1/favourites/${id}`;
 
 const spanError = document.getElementById('error')
@@ -115,6 +117,32 @@ async function deleteFaouvotireMichi(id){
     }
 }
 
+async function uploadMichiPhoto(){
+    const form = document.getElementById('upLoadingForm');
+    const formData = new FormData(form);
+
+    console.log(formData.get('file'))
+
+    const res = await fetch(urlApi_UPLOAD,{
+        method:'POST',
+        headers:{
+            // 'Content-type':'multipart/form-data',
+            'X-API-KEY':'live_EAiOhGE3wh3dcvwYQxxwZ7X5N3zYG286hEFBNu5jjFYnwYNxYNA07tCpg9XTOGGT' 
+        },
+        body: formData,
+    })
+    const data = await res.json()
+    if(res.status !== 201){
+        spanError.innerHTML = "Hubo un error : "+ res.status + "/ " + data.message;
+        console.log(data)
+    }else {
+        console.log("Imagen Subida !!!")
+        console.log("el id es: "+ data.id)
+        console.log(data)
+        saveFavouriteMichi(data.id)
+        loadFavouriteMichis();
+    }
+}
 
 // Se manda a llamar la función cuando recien se carga la página
 loadRandomMichis();
